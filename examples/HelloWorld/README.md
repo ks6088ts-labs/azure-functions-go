@@ -57,6 +57,30 @@ az functionapp create \
     --functions-version $functionsVersion \
     --os-type $osType \
     --runtime $runtime
+
+# Delete resources
+az group delete --name $resourceGroup
+```
+
+## with Bicep
+
+Ref. [Quickstart: Create and deploy Azure Functions resources using Bicep](https://learn.microsoft.com/en-us/azure/azure-functions/functions-create-first-function-bicep?tabs=CLI)
+
+```shell
+cd examples/HelloWorld/iac/bicep/
+
+randomIdentifier=$(date "+%Y%m%d%H%M%S")
+resourceGroup="rg-$randomIdentifier"
+location="japaneast"
+
+# create resource group
+az group create --name $resourceGroup --location "$location"
+
+# bicep
+az deployment group create --resource-group $resourceGroup --template-file main.bicep --parameters prefix=azfuncgo
+
+# delete resources
+az group delete --name $resourceGroup
 ```
 
 ## with Terraform
@@ -64,7 +88,12 @@ az functionapp create \
 ```shell
 cd examples/HelloWorld/iac/terraform/
 terraform init
+
+# create resources
 terraform apply
+
+# delete resources
+terraform destroy
 ```
 
 # Build a function
