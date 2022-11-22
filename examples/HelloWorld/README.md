@@ -63,7 +63,26 @@ cd examples/HelloWorld
 func azure functionapp publish $functionApp
 ```
 
+# Deploy with GitHub Actions
+
+```shell
+rgName="your resource group name"
+spName="your service principal name"
+subscriptionId=$(az account show -o tsv --query id)
+
+# generate AZURE_CREDENTIALS
+AZURE_CREDENTIALS=$(az ad sp create-for-rbac \
+    --name $spName \
+    --role contributor \
+    --scopes /subscriptions/{subscription-id}/resourceGroups/{resource-group} \
+    --sdk-auth)
+
+# set GitHub secret
+gh secret set AZURE_CREDENTIALS -b $AZURE_CREDENTIALS
+```
+
 # References
 
 - [Quickstart: Create a Go or Rust function in Azure using Visual Studio Code](https://learn.microsoft.com/en-us/azure/azure-functions/create-first-function-vs-code-other?tabs=go%2Cwindows)
 - [コマンドラインでAzure Functions Custom Handlerをデプロイする（Go / HTTP trigger編）](https://qiita.com/qt-luigi/items/aad12cefcd4af825a632)
+- [Configure deployment credentials](https://github.com/azure/login#configure-deployment-credentials)
