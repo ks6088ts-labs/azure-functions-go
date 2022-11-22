@@ -1,0 +1,44 @@
+name: deploy-http-example
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  OS_TYPE: windows
+  FUNCTION_APP: fa-20221122152629
+
+jobs:
+  deploy-http-example:
+    strategy:
+      matrix:
+        platform: [ubuntu-latest]
+        go-version: [1.19.x]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # to retrieve git tags
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Install the Azure Functions Core Tools
+        run: | # https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=v4%2Clinux%2Ccsharp%2Cportal%2Cbash#install-the-azure-functions-core-tools
+          curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
+          sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
+          sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-$(lsb_release -cs)-prod $(lsb_release -cs) main" > /etc/apt/sources.list.d/dotnetdev.list'
+          sudo apt-get update
+          sudo apt-get install azure-functions-core-tools-4
+      - name: Build & Deploy
+        run: |
+          cd examples/HelloWorld/HttpExample
+          make build GOOS=${{ env.OS_TYPE }} GOARCH=amd64
+          cd ../
+          func azure functionapp publish ${{ env.FUNCTION_APP }} --custom
