@@ -1,0 +1,29 @@
+name: deploy-hello-world-bicep
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  RESOURCE_GROUP_NAME: ghactions-rg
+
+jobs:
+  deploy-hello-world-bicep:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: deploy with Bicep
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+          resourceGroupName: ${{ env.RESOURCE_GROUP_NAME }}
+          template: ./examples/HelloWorld/iac/bicep/main.bicep
+          parameters: 'prefix=ghactions'
+          failOnStdErr: false
