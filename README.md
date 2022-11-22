@@ -11,3 +11,4 @@ Azure Functions written in Go
 - [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
 - [Go](https://go.dev/doc/install)
 - [GitHub CLI](https://cli.github.com/manual/installation)
+- [Bicep tools](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/install)
