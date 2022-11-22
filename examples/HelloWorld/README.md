@@ -122,6 +122,7 @@ func azure functionapp publish $functionApp --custom
 Register Azure credentials on GitHub secrets with the following commands.
 
 Ref. [Configure deployment credentials](https://github.com/azure/login#configure-deployment-credentials)
+Ref. [Quickstart: Deploy Bicep files by using GitHub Actions](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deploy-github-actions?tabs=userlevel%2CCLI)
 
 ```shell
 rgName="your resource group name"
@@ -137,6 +138,9 @@ AZURE_CREDENTIALS=$(az ad sp create-for-rbac \
 
 # set GitHub secret
 gh secret set AZURE_CREDENTIALS -b $AZURE_CREDENTIALS
+gh secret set SUBSCRIPTION_ID -b $subscriptionId
 
-# put .github/workflows/deploy-http-example.yml and push changes to the repo
+# See the following deployment scripts
+# - .github/workflows/deploy-http-example.yml
+# - .github/workflows/deploy-hello-world-bicep.yml
 ```
