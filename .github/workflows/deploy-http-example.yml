@@ -3,7 +3,7 @@ name: deploy-http-example
 on:
   push:
     branches:
-      - feature/issue-4_deploy-via-github-actions # fixme
+      - main
 
 env:
   OS_TYPE: windows
