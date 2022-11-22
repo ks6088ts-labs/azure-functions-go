@@ -1,4 +1,7 @@
-# Logs
+# Create an Azure Functions project
+
+[Quickstart: Create a Go or Rust function in Azure using Visual Studio Code](https://learn.microsoft.com/en-us/azure/azure-functions/create-first-function-vs-code-other?tabs=go%2Cwindows)
+
 
 ```shell
 mkdir -p examples/HelloWorld
@@ -12,7 +15,7 @@ func new \
 
 # build a function
 cd HttpExample
-make build
+go build -o ./dist/handler .
 
 # run server locally
 cd ../
@@ -21,7 +24,8 @@ func start
 # curl http://localhost:7071/api/HttpExample -vvvv
 ```
 
-# Deploy
+# Create Azure resources
+## with Azure CLI
 
 ```shell
 randomIdentifier=$(date "+%Y%m%d%H%M%S")
@@ -53,17 +57,42 @@ az functionapp create \
     --functions-version $functionsVersion \
     --os-type $osType \
     --runtime $runtime
-
-# Build functions
-cd examples/HelloWorld/HttpExample
-make build GOOS=$osType GOARCH=amd64
-
-# Publish function app
-cd examples/HelloWorld
-func azure functionapp publish $functionApp
 ```
 
-# Deploy with GitHub Actions
+## with Terraform
+
+```shell
+cd examples/HelloWorld/iac/terraform/
+terraform init
+terraform apply
+```
+
+# Build a function
+
+```shell
+cd examples/HelloWorld/HttpExample
+
+# The os/arch of release binary should be set with the same one as the target server
+make build GOOS=windows GOARCH=amd64
+```
+
+# Deploy a function
+
+## Manually with Azure Functions Core Tools
+
+```shell
+functionApp="azfuncgo-fa"
+
+# Publish function app manually via Azure Functions Core Tools
+cd examples/HelloWorld
+func azure functionapp publish $functionApp --custom
+```
+
+## GitHub Actions
+
+Register Azure credentials on GitHub secrets with the following commands.
+
+Ref. [Configure deployment credentials](https://github.com/azure/login#configure-deployment-credentials)
 
 ```shell
 rgName="your resource group name"
@@ -79,10 +108,6 @@ AZURE_CREDENTIALS=$(az ad sp create-for-rbac \
 
 # set GitHub secret
 gh secret set AZURE_CREDENTIALS -b $AZURE_CREDENTIALS
+
+# put .github/workflows/deploy-http-example.yml and push changes to the repo
 ```
-
-# References
-
-- [Quickstart: Create a Go or Rust function in Azure using Visual Studio Code](https://learn.microsoft.com/en-us/azure/azure-functions/create-first-function-vs-code-other?tabs=go%2Cwindows)
-- [コマンドラインでAzure Functions Custom Handlerをデプロイする（Go / HTTP trigger編）](https://qiita.com/qt-luigi/items/aad12cefcd4af825a632)
-- [Configure deployment credentials](https://github.com/azure/login#configure-deployment-credentials)
