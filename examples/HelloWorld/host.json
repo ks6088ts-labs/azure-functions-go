@@ -14,9 +14,10 @@
   },
   "customHandler": {
     "description": {
-      "defaultExecutablePath": "",
+      "defaultExecutablePath": "HttpExample/dist/handler",
       "workingDirectory": "",
       "arguments": []
-    }
+    },
+    "enableForwardingHttpRequest": true
   }
 }
