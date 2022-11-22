@@ -5,3 +5,4 @@ help:
 
 .PHONY: ci-test
 ci-test: ## ci test
+	cd examples/HelloWorld/HttpExample && make ci-test
