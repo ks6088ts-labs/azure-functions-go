@@ -23,6 +23,9 @@ package sandbox
 
 import (
 	"fmt"
+	"log"
+	"net/http"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -33,7 +36,13 @@ var helloCmd = &cobra.Command{
 	Short: "SandBox Hello Command",
 	Long:  `This is a sandbox command.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("sandbox hello called")
+		listenAddr := ":8080"
+		if val, ok := os.LookupEnv("FUNCTIONS_CUSTOMHANDLER_PORT"); ok {
+			listenAddr = ":" + val
+		}
+		http.HandleFunc("/api/HttpExample", helloHandler)
+		log.Printf("About to listen on %s. Go to http://localhost%s/", listenAddr, listenAddr)
+		log.Fatal(http.ListenAndServe(listenAddr, nil))
 	},
 }
 
@@ -49,4 +58,13 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// helloCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+func helloHandler(w http.ResponseWriter, r *http.Request) {
+	message := "This HTTP triggered function executed successfully. Pass a name in the query string for a personalized response.\n"
+	name := r.URL.Query().Get("name")
+	if name != "" {
+		message = fmt.Sprintf("Hello, %s. This HTTP triggered function executed successfully.\n", name)
+	}
+	fmt.Fprint(w, message)
 }

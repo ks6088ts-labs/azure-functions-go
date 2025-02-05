@@ -24,7 +24,7 @@ GOLANGCI_LINT_VERSION ?= 1.62.2
 TRIVY_VERSION ?= 0.58.1
 
 # Misc
-OUTPUT_DIR ?= dist
+OUTPUT_DIR ?= configs/dist
 OUTPUT ?= $(OUTPUT_DIR)/azure-functions-go
 
 .PHONY: help
@@ -103,3 +103,11 @@ docker-scan: ## scan Docker image
 
 .PHONY: ci-test-docker
 ci-test-docker: install-deps-dev docker-lint docker-build docker-scan docker-run ## run CI test for Docker
+
+# ---
+# Functions
+# ---
+
+.PHONY: functions
+functions: build ## run Azure Functions locally
+	cd configs && func start --verbose
