@@ -103,3 +103,11 @@ docker-scan: ## scan Docker image
 
 .PHONY: ci-test-docker
 ci-test-docker: install-deps-dev docker-lint docker-build docker-scan docker-run ## run CI test for Docker
+
+# ---
+# Functions
+# ---
+
+.PHONY: functions
+functions: build ## run Azure Functions locally
+	cd configs && func start --verbose
