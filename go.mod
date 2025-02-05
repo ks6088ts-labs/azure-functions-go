@@ -1,4 +1,4 @@
-module github.com/ks6088ts/template-go
+module github.com/ks6088ts-labs/azure-functions-go
 
 go 1.23.2
 
