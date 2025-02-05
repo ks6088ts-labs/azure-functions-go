@@ -4,7 +4,7 @@ on:
     tags:
       - "v*"
 env:
-  IMAGE_NAME: template-go
+  IMAGE_NAME: azure-functions-go
 jobs:
   ghcr:
     runs-on: ubuntu-latest
