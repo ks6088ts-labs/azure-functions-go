@@ -14,8 +14,8 @@
   },
   "customHandler": {
     "description": {
-      "defaultExecutablePath": "../dist/azure-functions-go",
-      "workingDirectory": "..",
+      "defaultExecutablePath": "dist/azure-functions-go",
+      "workingDirectory": ".",
       "arguments": ["sandbox", "hello"]
     },
     "enableForwardingHttpRequest": true

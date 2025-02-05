@@ -24,7 +24,7 @@ GOLANGCI_LINT_VERSION ?= 1.62.2
 TRIVY_VERSION ?= 0.58.1
 
 # Misc
-OUTPUT_DIR ?= dist
+OUTPUT_DIR ?= configs/dist
 OUTPUT ?= $(OUTPUT_DIR)/azure-functions-go
 
 .PHONY: help
